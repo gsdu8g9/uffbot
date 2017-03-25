@@ -10,11 +10,27 @@
 #include <QtQuick/QQuickView>
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlContext>
+#include <QSslSocket>
 #include <QObject>
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    if(!QSslSocket::supportsSsl()){
+        //Ошибка, нет библиотек openssl. Нахуя он нужен, если ключи шифрования у ФСБ я не знаю, но можно сделать так
+        //Qt компилирует с OpenSSL из коробки, но из за бюрократии не может сам кидать dll к exe файлу
+        //Заходим на https://indy.fulgan.com/SSL/
+        //Ищем ревизию openssl по строке, возращаемой через QSslSocket::sslLibraryBuildVersionString()
+        //кидаем libeay32.dll и ssleay32.dll из архива к бинарнику
+        //Следует качать ревизию, соответствующую разрядности компилятора, в нашем случае MSVC2015_64bit
+        QMessageBox msg;
+        msg.setText("ERROR! NEED OpenSSL installed, project compiled with "+QSslSocket::sslLibraryBuildVersionString()+" so you need add some dll's.");
+        msg.exec();
+        qDebug()<<"Проверь main функцию, я знаю как убрать эту поебень и оставил комментарий";
+        return a.exit(0);
+    }
+
     GuiWindow w;
     VkReader vk;
 
