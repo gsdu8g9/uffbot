@@ -1,13 +1,11 @@
 #include "vkchoosepeer.h"
 
 VkChoosePeer::VkChoosePeer(QObject *parent) : QObject(parent){
-
-}
-
-void VkChoosePeer::setView(QQuickView &v){
-    viewer=&v;
+    viewer= new QQuickView;
+    viewer->rootContext()->setContextProperty("backEnd", this);
     connect(viewer,SIGNAL(closing(QQuickCloseEvent*)),this,SLOT(easteregg()));
 }
+
 
 void VkChoosePeer::ChoosePeer(QString token){
     access_token=token;

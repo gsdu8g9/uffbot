@@ -2,7 +2,9 @@
 #define VKAUTH_H
 
 #include <QObject>
+#include <QtWebEngine/QtWebEngine>
 #include <QWebEngineView>
+#include <QWebEngineProfile>
 #include <QUrl>
 #include <QUrlQuery>
 
@@ -19,7 +21,7 @@ void checkUrl();
 
 public:
 explicit VkAuth(QObject *parent = 0);
-void Auth(QWebEngineView &v);
+void Auth();
 
 
 signals:

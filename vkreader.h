@@ -45,6 +45,8 @@ public:
         return peer_id;
     }
 
+    void setNetworkAccessManager(QNetworkAccessManager &mwd, QNetworkAccessManager &ds);
+
 signals:
     void addLog(QString log);
     void choosePeer(QString token);
@@ -64,6 +66,7 @@ public slots:
 
 private slots:
     void messagewatchdogcycle();
+    //void exit();
 
 
 };

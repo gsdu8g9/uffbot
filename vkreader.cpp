@@ -17,10 +17,13 @@ int getType(QString xml){
 }
 
 VkReader::VkReader(QObject *parent) : QObject(parent){
-datasender = new QNetworkAccessManager(this);
-messagewatchdog = new QNetworkAccessManager(this);
-connect(datasender, SIGNAL(finished(QNetworkReply*)),this, SLOT(getResponse(QNetworkReply*)));
-connect(messagewatchdog, SIGNAL(finished(QNetworkReply*)),this, SLOT(getResponse(QNetworkReply*)));
+}
+
+void VkReader::setNetworkAccessManager(QNetworkAccessManager &mwd, QNetworkAccessManager &ds){
+    datasender = &ds;
+    messagewatchdog = &mwd;
+    connect(datasender, SIGNAL(finished(QNetworkReply*)),this, SLOT(getResponse(QNetworkReply*)));
+    connect(messagewatchdog, SIGNAL(finished(QNetworkReply*)),this, SLOT(getResponse(QNetworkReply*)));
 }
 
 void VkReader::setToken(QString token){

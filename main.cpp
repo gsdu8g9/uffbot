@@ -4,14 +4,10 @@
 #include "vkchoosepeer.h"
 #include "vkcaptcha.h"
 #include <QApplication>
-#include <QtWebEngine/QtWebEngine>
-#include <QWebEngineView>
-#include <QWebEngineProfile>
-#include <QtQuick/QQuickView>
-#include <QtQml/QQmlEngine>
-#include <QtQml/QQmlContext>
+#include <QNetworkAccessManager>
 #include <QSslSocket>
 #include <QObject>
+#include <QThread>
 
 int main(int argc, char *argv[])
 {
@@ -33,27 +29,27 @@ int main(int argc, char *argv[])
 
     GuiWindow w;
     VkReader vk;
+    //vk лежит в отдельном потоке, в нем нельзя создавать объекты. Ну или будут злые окошки при закрытии...
+    QNetworkAccessManager messagewatchdog;
+    QNetworkAccessManager datasender;
+    vk.setNetworkAccessManager(messagewatchdog,datasender);
+
 
 
     QObject::connect(&vk,SIGNAL(addLog(QString)),&w,SLOT(addLog(QString)));
 
     w.addLog("Вас приветствует УФФБОТ\nДля продолжения работы войдите в ВК");
 
-    QWebEngineView webview;
-    //webview.page()->profile()->setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
-    webview.setWindowTitle("Вход в вк");
+
     VkAuth vkauth;
-    vkauth.Auth(webview);
+    vkauth.Auth();
 
     QObject::connect(&vkauth,SIGNAL(authcompleted(QString)),&vk,SLOT(setToken(QString)));
 
     VkChoosePeer vkpeer;
-    QQuickView viewer;
-    vkpeer.setView(viewer);
-    viewer.rootContext()->setContextProperty("backEnd", &vkpeer);
+
     QObject::connect(&vk,SIGNAL(choosePeer(QString)),&vkpeer,SLOT(ChoosePeer(QString)));
     QObject::connect(&vkpeer,SIGNAL(setPeer(QString)),&vk,SLOT(setPeer(QString)));
-    QObject::connect(viewer.engine(), &QQmlEngine::quit, &viewer, &QWindow::close);
 
     VkCaptcha vkcaptcha;
     QObject::connect(&vk,SIGNAL(runCaptcha(QString,QString,QString)),&vkcaptcha,SLOT(runCaptcha(QString,QString,QString)));
@@ -61,6 +57,9 @@ int main(int argc, char *argv[])
     QObject::connect(&vkcaptcha,SIGNAL(sendData(QString)),&vk,SLOT(sendData(QString)));
     QObject::connect(&vkcaptcha,SIGNAL(restartbot()),&vk,SLOT(restartbot()));
 
+    QThread *thread = new QThread;
+    vk.moveToThread(thread);
+    thread->start();
 
     return a.exec();
 

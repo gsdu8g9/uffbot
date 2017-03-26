@@ -2,6 +2,8 @@
 #define VKCHOOSEPEER_H
 
 #include <QtQuick/QQuickView>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlContext>
 #include <QApplication>
 #include <QMessageBox>
 
@@ -14,7 +16,6 @@ QString peer_id;
 
 public:
     explicit VkChoosePeer(QObject *parent = 0);
-    void setView(QQuickView &v);
 
 public slots:
     void ChoosePeer(QString token);

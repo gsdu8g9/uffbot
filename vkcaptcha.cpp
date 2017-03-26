@@ -37,6 +37,7 @@ void VkCaptcha::getResponse(QNetworkReply *reply)
     pixmap.loadFromData(data);
     captcha->setPixmap(pixmap);
     dialog->show();
+    dialog->setFocus();
 }
 
 void VkCaptcha::runCaptcha(QString sid,QString id,QString token){

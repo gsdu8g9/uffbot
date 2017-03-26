@@ -1,14 +1,14 @@
 #include "vkauth.h"
 
 VkAuth::VkAuth(QObject *parent) : QObject(parent){
-
+    viewer = new QWebEngineView;
+    //webview.page()->profile()->setPersistentCookiesPolicy(QWebEngineProfile::NoPersistentCookies);
+    viewer->setWindowTitle("Вход в вк");
+    viewer->setWindowFlags(Qt::WindowTitleHint);
+    connect(viewer,SIGNAL(loadFinished(bool)),this,SLOT(checkUrl()));
 }
 
-void VkAuth::Auth(QWebEngineView &v){
-viewer=&v;
-connect(viewer,SIGNAL(loadFinished(bool)),this,SLOT(checkUrl()));
-
-viewer->setWindowFlags(Qt::WindowTitleHint);
+void VkAuth::Auth(){
 viewer->setUrl(QUrl(QString("http://oauth.vk.com/authorize?client_id="+id.toString()+"redirect_uri=https://oauth.vk.com/blank.html&response_type=token&scope=messages&display=mobile")));
 viewer->show();
 }
