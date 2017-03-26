@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     vkauth.cpp \
     vkchoosepeer.cpp \
     vkmessageparser.cpp \
-    vkcaptcha.cpp
+    vkcaptcha.cpp \
+    vkmessageparser.old.cpp
 
 HEADERS  += guiwindow.h \
     vkreader.h \
