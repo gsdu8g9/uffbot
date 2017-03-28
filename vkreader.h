@@ -12,9 +12,12 @@
 #include <QDate>
 #include <windows.h>
 
+#include "vkmessageparser.h"
+
 class VkReader : public QObject
 {
 Q_OBJECT
+VkMessageParser *parser;
 
 QNetworkAccessManager *messagewatchdog;
 QNetworkAccessManager *datasender;
@@ -32,6 +35,10 @@ int lastdate=0;
 
 public:
     explicit VkReader(QObject *parent = 0);
+
+    void setMessageParser(VkMessageParser &p){
+        parser=&p;
+    }
 
     void log(QString log){
         emit addLog(log);
@@ -51,6 +58,7 @@ signals:
     void addLog(QString log);
     void choosePeer(QString token);
     void runCaptcha(QString sid,QString id,QString token);
+
 
 private:
     void checkChat();

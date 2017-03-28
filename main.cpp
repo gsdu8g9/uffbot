@@ -3,11 +3,16 @@
 #include "vkauth.h"
 #include "vkchoosepeer.h"
 #include "vkcaptcha.h"
+#include "vkmessageparser.h"
 #include <QApplication>
 #include <QNetworkAccessManager>
 #include <QSslSocket>
 #include <QObject>
 #include <QThread>
+#include <QFileDialog>
+
+
+
 
 int main(int argc, char *argv[])
 {
@@ -33,12 +38,19 @@ int main(int argc, char *argv[])
     QNetworkAccessManager messagewatchdog;
     QNetworkAccessManager datasender;
     vk.setNetworkAccessManager(messagewatchdog,datasender);
-
-
-
     QObject::connect(&vk,SIGNAL(addLog(QString)),&w,SLOT(addLog(QString)));
 
-    w.addLog("Вас приветствует УФФБОТ\nДля продолжения работы войдите в ВК");
+    VkMessageParser vkmessageparser;
+    w.addLog("Драститя! Для начала работы с УФФ ботом требуется выбрать словарь. Пример словаря можно увидеть в GitHub репо. Кодировку следует ставить UTF-8");
+    bool isParsed=vkmessageparser.loadDictionary(QFileDialog::getOpenFileName(NULL, "Выберите УФФ словарь", QDir::homePath(), "UFFXML (*.uffxml)"));
+    if(!isParsed){
+        QMessageBox msg;
+        msg.setText("Не могу распарсить словарь, проверьте!");
+        msg.exec();
+        return a.exit(0);
+    }
+    vk.setMessageParser(vkmessageparser);
+    w.addLog("\nВидимо, всё нормально. Далее требуется войти в ВК");
 
 
     VkAuth vkauth;

@@ -1,5 +1,4 @@
 #include "vkreader.h"
-#include "vkmessageparser.cpp"
 
 
 QString getElementValue(QString xml,QString starttag,QString stoptag){
@@ -82,11 +81,11 @@ void VkReader::getResponse(QNetworkReply *reply){
         if(thisdate>lastdate){
         lastdate=thisdate;
         QString text=getElementValue(value,"<body>","</body>");
-        log("\nПринято сообщение <<"+text+">>");
-        QString answer=VkMessageParser::parse(text);
-        if(!answer.compare("NoMESSAGE!",Qt::CaseSensitive)==0){
-            qDebug()<<answer.compare("NoMESSAGE!",Qt::CaseSensitive);
-            sendData("https://api.vk.com/method/messages.send.xml?access_token="+getToken()+"&peer_id="+getPeer()+"&message="+answer+"&v=10");
+        log("\nПринято сообщение <<"+text+">> date="+QString::number(lastdate));
+        QString answer=parser->parseString(text);
+                if(!answer.compare("NoMESSAGE!",Qt::CaseSensitive)==0){
+                    qDebug()<<answer.compare("NoMESSAGE!",Qt::CaseSensitive);
+                    sendData("https://api.vk.com/method/messages.send.xml?access_token="+getToken()+"&peer_id="+getPeer()+"&message="+answer+"&v=10");
         }
         }
 

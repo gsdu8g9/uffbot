@@ -28,15 +28,17 @@ SOURCES += main.cpp\
     vkreader.cpp \
     vkauth.cpp \
     vkchoosepeer.cpp \
-    vkmessageparser.cpp \
     vkcaptcha.cpp \
-    vkmessageparser.old.cpp
+    vkmessageparser.old2.cpp \
+    vkmessageparser.old1.cpp \
+    vkmessageparser.cpp
 
 HEADERS  += guiwindow.h \
     vkreader.h \
     vkauth.h \
     vkchoosepeer.h \
-    vkcaptcha.h
+    vkcaptcha.h \
+    vkmessageparser.h
 
 RESOURCES += \
     res.qrc
