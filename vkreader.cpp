@@ -16,7 +16,9 @@ int getType(QString xml){
 }
 
 VkReader::VkReader(QObject *parent) : QObject(parent){
+    userid=QInputDialog::getText(NULL, "Введите id приложения", "Требуется id для игнорирования сообщений от бота. Введите.", QLineEdit::Normal, "420092478");
 }
+
 
 void VkReader::setNetworkAccessManager(QNetworkAccessManager &mwd, QNetworkAccessManager &ds){
     datasender = &ds;
@@ -78,7 +80,7 @@ void VkReader::getResponse(QNetworkReply *reply){
 
     case 1:{
         int thisdate=getElementValue(value,"<date>","</date>").toInt();
-        if(thisdate>lastdate){
+        if((thisdate>lastdate)&&(userid.compare(getElementValue(value,"<from_id>","</from_id>"),Qt::CaseInsensitive)!=0)){
         lastdate=thisdate;
         QString text=getElementValue(value,"<body>","</body>");
         log("\nПринято сообщение <<"+text+">> date="+QString::number(lastdate));
@@ -111,7 +113,7 @@ void VkReader::getResponse(QNetworkReply *reply){
 }
 
 void VkReader::messagewatchdogcycle(){
-Sleep(1000);
+Sleep(500);
 if(isrunning) messagewatchdog->get(QNetworkRequest(QUrl("https://api.vk.com/method/messages.getHistory.xml?access_token="+getToken()+"&peer_id="+getPeer()+"&count=1&v=10")));
 }
 

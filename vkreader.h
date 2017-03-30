@@ -10,6 +10,7 @@
 #include <QNetworkAccessManager>
 #include <QDateTime>
 #include <QDate>
+#include <QInputDialog>
 #include <windows.h>
 
 #include "vkmessageparser.h"
@@ -23,6 +24,8 @@ QNetworkAccessManager *messagewatchdog;
 QNetworkAccessManager *datasender;
 QString access_token;
 QString peer_id;
+
+QString userid;
 
 //Если появится капча можно поюзать как симафор
 bool isrunning=true;

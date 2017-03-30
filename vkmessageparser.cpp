@@ -72,7 +72,7 @@ QString VkMessageParser::compareStrings(QStringList list){
 QString VkMessageParser::parseString(QString value){
     QStringList symbols;
     QString ret;
-    symbols << "," << "." << "!";
+    symbols << "," << "." << "!" << "-" << "?";
     ret=removesymbols(value,symbols);
 
     QStringList letterlist;
