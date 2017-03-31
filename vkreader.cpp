@@ -9,6 +9,8 @@ else return xml.mid(startpos,endpos-startpos);
 }
 
 int getType(QString xml){
+    if(xml.indexOf("<action>chat_invite_user</action>")>-1) return -2;
+    if(xml.indexOf("<action>chat_kick_user</action>")>-1) return -1;
     if(xml.indexOf("<error>")>-1) return 0;
     if(xml.indexOf("<body>")>-1) return 1;
     if(xml.indexOf("<response>")>-1) return 2;
@@ -72,15 +74,37 @@ void VkReader::getResponse(QNetworkReply *reply){
     int type=getType(value);
 
     switch (type)  {
+    case -2:{
+        //Добавили братишку
+        int thisdate=getElementValue(value,"<date>","</date>").toInt();
+        if((thisdate>lastdate)&&(userid.compare(getElementValue(value,"<from_id>","</from_id>"),Qt::CaseInsensitive)!=0)){
+        lastdate=thisdate;
+        log("\nБратишку добавили: id"+getElementValue(value,"<action_mid>","</action_mid>"));
+        }
+        if(isrunning) QMetaObject::invokeMethod(this, "messagewatchdogcycle", Qt::QueuedConnection);
+        break;
+    }
+    case -1:{
+        //Кикнули братишку
+        int thisdate=getElementValue(value,"<date>","</date>").toInt();
+        if((thisdate>lastdate)&&(userid.compare(getElementValue(value,"<from_id>","</from_id>"),Qt::CaseInsensitive)!=0)){
+        lastdate=thisdate;
+        log("\nБратишку кикнули: id"+getElementValue(value,"<action_mid>","</action_mid>"));
+        }
+        if(isrunning) QMetaObject::invokeMethod(this, "messagewatchdogcycle", Qt::QueuedConnection);
+        break;
+    }
+
     case 0:{
         //ошибка/капча
-        int errorcode=getElementValue(value,"<error_code>","</error_code>").toInt();
-        if(errorcode==14){
+        QString errorcode=getElementValue(value,"<error_code>","</error_code>");
+        if(errorcode.toInt()==14){
            isrunning=false;
            emit runCaptcha(getElementValue(value,"<captcha_sid>","</captcha_sid>"),peer_id,access_token);
         }
         else{
            log("\nAPI VK ВЕРНУЛО ОШИБКУ "+errorcode);
+           qDebug() << value;
         }
         break;
     }
