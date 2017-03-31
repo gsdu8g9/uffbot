@@ -17,6 +17,7 @@ QStringList myAnswers;
 
 public:
 explicit VkMessageParser(QObject *parent = 0);
+~VkMessageParser();
 bool loadDictionary(const QString path);
 QString parseString(QString value);
 private:

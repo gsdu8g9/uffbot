@@ -19,6 +19,11 @@ VkCaptcha::VkCaptcha(QObject *parent) : QObject(parent){
     connect(sendcaptcha,SIGNAL(clicked(bool)),this,SLOT(captchaEntered()));
 }
 
+VkCaptcha::~VkCaptcha(){
+    if(!dialog.isNull()) dialog.clear();
+    if(!manager.isNull()) manager.clear();
+}
+
 void VkCaptcha::captchaEntered(){
     dialog->hide();
     emit sendData("https://api.vk.com/method/messages.send.xml?access_token="+access_token+"&peer_id="+peer_id+"&message=Бот выпал, прилетела каптча...&v=10&captcha_sid="+captcha_sid+"&captcha_key="+lineEdit->text());

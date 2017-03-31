@@ -11,6 +11,8 @@
 #include <QNetworkReply>
 #include <QNetworkAccessManager>
 
+#include <QPointer>
+
 class VkCaptcha : public QObject
 {
 Q_OBJECT
@@ -18,14 +20,15 @@ QVBoxLayout *verticalLayout;
 QLabel *captcha;
 QPushButton *sendcaptcha;
 QLineEdit *lineEdit;
-QDialog *dialog;
+QPointer<QDialog> dialog; //Обертка для указателя, на самом деле это QDialog *dialog
 QString captcha_sid;
 QString peer_id;
 QString access_token;
-QNetworkAccessManager *manager;
+QPointer<QNetworkAccessManager> manager; //Обертка для указателя, на самом деле это QNetworkAccessManager *manager
 
 public:
 explicit VkCaptcha(QObject *parent = 0);
+~VkCaptcha();
 
 signals:
     void sendData(QString url);

@@ -19,7 +19,9 @@
 
 
 VkMessageParser::VkMessageParser(QObject *parent) : QObject(parent){
+}
 
+VkMessageParser::~VkMessageParser(){
 }
 
 bool VkMessageParser::loadDictionary(const QString path){

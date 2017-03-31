@@ -8,10 +8,12 @@
 #include <QUrl>
 #include <QUrlQuery>
 
+#include <QPointer>
+
 class VkAuth : public QObject
 {
 Q_OBJECT
-QWebEngineView *viewer;
+QPointer<QWebEngineView> viewer; //Обертка для QWebEngineView *viewer;
 QString access_token;
 QVariant id=5915208;
 
@@ -21,6 +23,7 @@ void checkUrl();
 
 public:
 explicit VkAuth(QObject *parent = 0);
+~VkAuth();
 void Auth();
 
 

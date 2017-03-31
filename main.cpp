@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 
     VkMessageParser vkmessageparser;
     w.addLog("Драститя! Для начала работы с УФФ ботом требуется выбрать словарь. Пример словаря можно увидеть в GitHub репо. Кодировку следует ставить UTF-8");
-    bool isParsed=vkmessageparser.loadDictionary(QFileDialog::getOpenFileName(NULL, "Выберите УФФ словарь", QDir::homePath(), "UFFXML (*.xml)"));
+    bool isParsed=vkmessageparser.loadDictionary(QFileDialog::getOpenFileName(NULL, "Выберите УФФ словарь", QDir::homePath(), "UFFXML (*.uffxml)"));
     if(!isParsed){
         QMessageBox msg;
         msg.setText("Не могу распарсить словарь, проверьте!");
@@ -69,9 +69,11 @@ int main(int argc, char *argv[])
     QObject::connect(&vkcaptcha,SIGNAL(sendData(QString)),&vk,SLOT(sendData(QString)));
     QObject::connect(&vkcaptcha,SIGNAL(restartbot()),&vk,SLOT(restartbot()));
 
+
     QThread *thread = new QThread;
     vk.moveToThread(thread);
     thread->start();
+
 
     return a.exec();
 

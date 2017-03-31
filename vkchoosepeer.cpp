@@ -6,6 +6,10 @@ VkChoosePeer::VkChoosePeer(QObject *parent) : QObject(parent){
     connect(viewer,SIGNAL(closing(QQuickCloseEvent*)),this,SLOT(easteregg()));
 }
 
+VkChoosePeer::~VkChoosePeer(){
+    if(!viewer.isNull())viewer.clear();
+}
+
 
 void VkChoosePeer::ChoosePeer(QString token){
     access_token=token;

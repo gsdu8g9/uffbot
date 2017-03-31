@@ -19,6 +19,12 @@ VkReader::VkReader(QObject *parent) : QObject(parent){
     userid=QInputDialog::getText(NULL, "Введите id приложения", "Требуется id для игнорирования сообщений от бота. Введите.", QLineEdit::Normal, "420092478");
 }
 
+VkReader::~VkReader(){
+    if(!messagewatchdog.isNull()) messagewatchdog.clear();
+    if(!datasender.isNull()) datasender.clear();
+    if(!parser.isNull()) parser.clear();
+}
+
 
 void VkReader::setNetworkAccessManager(QNetworkAccessManager &mwd, QNetworkAccessManager &ds){
     datasender = &ds;
@@ -62,6 +68,7 @@ datasender->get(QNetworkRequest(QUrl(param)));
 void VkReader::getResponse(QNetworkReply *reply){
     //TODO: ПАРСИНГ ОШИБОК ВКОНТАКТЕ
     QString value=reply->readAll();
+    delete reply;
     int type=getType(value);
 
     switch (type)  {

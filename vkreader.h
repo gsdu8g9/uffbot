@@ -13,15 +13,16 @@
 #include <QInputDialog>
 #include <windows.h>
 
+#include <QPointer>
+
 #include "vkmessageparser.h"
 
 class VkReader : public QObject
 {
 Q_OBJECT
-VkMessageParser *parser;
-
-QNetworkAccessManager *messagewatchdog;
-QNetworkAccessManager *datasender;
+QPointer<VkMessageParser> parser; //VkMessageParser *parser с оберткой
+QPointer<QNetworkAccessManager> messagewatchdog; //QNetworkAccessManager *messagewatchdog с оберткой
+QPointer<QNetworkAccessManager> datasender; //QNetworkAccessManager *datasender с оберткой
 QString access_token;
 QString peer_id;
 
@@ -38,6 +39,7 @@ int lastdate=0;
 
 public:
     explicit VkReader(QObject *parent = 0);
+    ~VkReader();
 
     void setMessageParser(VkMessageParser &p){
         parser=&p;
